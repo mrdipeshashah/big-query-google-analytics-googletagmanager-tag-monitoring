@@ -1,0 +1,52 @@
+WITH base_events AS (
+  SELECT
+    PARSE_DATE('%Y%m%d', event_date) AS date,
+    event_name,
+    user_pseudo_id,
+    -- Extracting session_id for unique counts
+    (SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_id') AS session_id,
+    -- GTM Tagging Parameters (LOWER used for consistency in Looker)
+    LOWER((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'tag_name')) AS tag_name,
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'container_id') AS container_id,
+    -- Handling NULL versions by defaulting to 0
+    IFNULL((SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'container_version'), 0) AS container_version,
+    LOWER((SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'tag_category')) AS tag_category,
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'tag_date_creation') AS tag_date_creation,
+    -- Precision timestamp from your GTM setup
+    (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'hit_timestamp') AS gtm_hit_time
+  FROM `enter.tablename_123456.events_*`
+  -- Date filter
+  WHERE _TABLE_SUFFIX BETWEEN '20260101' AND '20260331'
+)
+
+SELECT 
+  date,
+  -- Monthly dimensions for sorting/filtering
+  EXTRACT(MONTH FROM date) AS month_no,
+  FORMAT_DATE('%B', date) AS month_name,
+  
+  -- Weekly dimensions (Monday-based)
+  EXTRACT(ISOWEEK FROM date) AS week_no,
+  DATE_TRUNC(date, WEEK(MONDAY)) AS week_start_date,
+  
+  -- Tag Dimensions
+  event_name,
+  tag_name,
+  container_id,
+  container_version,
+  tag_category,
+  tag_date_creation,
+  
+  -- Heartbeat Metrics (The missing pieces!)
+  MIN(gtm_hit_time) AS first_hit_recorded,
+  MAX(gtm_hit_time) AS last_hit_recorded,
+  
+  -- Volume Metrics
+  COUNT(*) AS event_count,
+  COUNT(DISTINCT CONCAT(user_pseudo_id, CAST(session_id AS STRING))) AS session_count
+FROM base_events
+-- Ensure we only report on rows where our custom GTM parameters exist
+WHERE tag_name IS NOT NULL
+  AND event_name NOT IN ('user_engagement','scroll','session_start','first_visit')
+GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+ORDER BY date DESC, event_count DESC
