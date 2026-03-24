@@ -13,7 +13,7 @@ Watch-Outs:
 
 1. To be able to monitor the performance of Google Analytics tags the most important is the architecture of each tag that is shared in the GitHub GTM link provided above. Each GA-GTM event tag requires adding the following event parameters: tag_name, tag_catgeory and tag_date_creation. These are additional info that will be available in Big Query for each event/tag. To be able to monitor the performance correctly having these event parameters correclty inputted will provide far greater insights
 2. The Event Variable Settings shared in the GitHub GTM link provided above should be a default for every GA4 event tag in Google Tag Manager. The Event Variable Settings has the following event parameters: container_id, container_version and timestamp, container_id + container_version are coming from built-in variables whwre timestamp is coming from a user defined variable which can be found in the GitHub GTM container. These provide addtional rich information in Big Query for each event.tag. Once the Event Variable Settings are set it should not be changed unless addtional event parameters are being added  
-3. The one addition the dashboard will need is adding in Health Status in the detailed log table + the scorecards under unhealthy tags, Add Field > Add Calculated Field > Label Health Status > Copy the below and change the tag name and requirements
+3. The one addition the dashboard will need is adding in Health Status in the audit log table + the scorecards under unhealthy tags, Add Field > Add Calculated Field > Label Health Status > Copy the below and change the tag name and requirements
 
  CASE 
   WHEN tag_name = 'live google analytics 4 pageview' AND event_count < 1000 THEN '⚠️ Low Traffic'
