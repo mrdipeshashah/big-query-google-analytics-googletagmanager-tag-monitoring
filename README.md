@@ -1,6 +1,6 @@
 This repository contains Big Query code using Google Analytics raw data monitoring the performance of Google Analytics tags via Google Tag Manager. 
 
-I have developed a looker studio dashboard (https://lookerstudio.google.com/reporting/2a2b938e-f964-4f3d-90aa-f4ec33eec7d5) that brings the insights to life. 
+I have developed a looker studio dashboard (https://lookerstudio.google.com/reporting/57cbf616-273f-4583-b5e9-a2e0a3499802) that brings the insights to life. 
 
 The steps required:
 
