@@ -3,6 +3,7 @@ This repository contains Big Query code using Google Analytics raw data monitori
 
 I have developed a looker studio dashboard (https://lookerstudio.google.com/reporting/57cbf616-273f-4583-b5e9-a2e0a3499802) that brings the insights to life. 
 
+# THE SET-UP
 The steps required:
 
 1. To be able to generate the data to build the dashboard it requires implementing this GTM container > https://github.com/GTMRecipeContainers/Google-Analytics-4-Enhanced-E-commerce it will require configuring the triggers + GA4 event tag that works best for the website
@@ -10,6 +11,7 @@ The steps required:
 3. The Big Query code provided, create and save the views in Big Query
 4. Make a copy of the looker studio dashboard and connect it to the saved views
 
+# THE WATCH-OUTS
 Watch-Outs: 
 
 1. To be able to monitor the performance of Google Analytics tags the most important is the architecture of each tag that is shared in the GitHub GTM link provided above. Each GA-GTM event tag requires adding the following event parameters: tag_name, tag_catgeory and tag_date_creation. These are additional info that will be available in Big Query for each event/tag. To be able to monitor the performance correctly having these event parameters correclty inputted will provide far greater insights
